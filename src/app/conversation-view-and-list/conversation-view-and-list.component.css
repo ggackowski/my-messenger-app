@@ -1,0 +1,14 @@
+.main-container {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    height: 100vh;
+}
+
+app-conversation-list {
+    flex-grow: 1
+}
+
+app-conversation-view {
+    flex-grow: 2
+}                        

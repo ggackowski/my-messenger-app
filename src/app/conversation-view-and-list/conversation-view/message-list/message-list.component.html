@@ -1,0 +1,10 @@
+<div class="message-list-container">
+    <div class="message-container" *ngFor="let message of messages" [ngStyle]="setMessageAlign(message)"> 
+        <app-message
+            [messageContent]="message.content"
+            [messageDate]="message.date"
+            [messageAuthor]="message.author.name"
+            [sentByThisUser]="message.author.name === 'Me'"     
+        ></app-message>
+    </div>
+</div>

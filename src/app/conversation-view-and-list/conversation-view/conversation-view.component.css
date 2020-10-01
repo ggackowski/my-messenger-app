@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+    align-items: stretch;
+    height: 100vh;
+}
+
+app-conversation-header {
+    flex-grow: 0;
+}
+
+app-message-list {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+app-message-input {
+    flex-grow: 0;
+}

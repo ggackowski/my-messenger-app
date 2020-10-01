@@ -1,0 +1,6 @@
+<div 
+    *ngFor="let conversation of conversations; let i = index" 
+    (click)="onConversationClick(i)"
+    [ngStyle]="i === clickedIndex ? setClickedStyle() : {}">
+    Conversation no. {{conversation.conversationId}}
+</div>

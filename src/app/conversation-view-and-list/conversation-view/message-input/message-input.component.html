@@ -1,0 +1,6 @@
+<div>
+    <input [(ngModel)]="messageInputText" 
+           type="text"
+           (keyup.enter)="onSendButtonClick()">
+    <button (click)="onSendButtonClick()">Send</button>
+</div>

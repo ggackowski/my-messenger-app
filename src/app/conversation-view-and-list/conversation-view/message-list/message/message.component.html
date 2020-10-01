@@ -1,0 +1,6 @@
+<div class="message-wrapper" [ngStyle]="this.getMessageColorStyle()">
+    <div class="message-date">{{this.messageAuthor}} {{this.messageDate | date: 'shortTime'}}</div>
+    <div class="message-content">
+        <p>{{this.messageContent}}</p>
+    </div>    
+</div>

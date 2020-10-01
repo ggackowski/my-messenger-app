@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'temp';
+
+  public newDate(): Date {
+    return new Date();
+  }
 }
