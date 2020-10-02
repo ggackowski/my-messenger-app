@@ -3,6 +3,7 @@ import { HostListener } from "@angular/core";
 import { MobileViewService } from '../mobile-view.service';
 import { ThrowStmt } from '@angular/compiler';
 import { ConversationDataService } from './conversation-view/services/conversation-data.service';
+import { UsersService } from '../users-manipulation/users.service';
 
 
 @Component({
@@ -12,14 +13,22 @@ import { ConversationDataService } from './conversation-view/services/conversati
 })
 export class ConversationViewAndListComponent implements OnInit {
   public isViewMobile = false;
+  public activeUser = undefined;
 
   constructor(private mobileViewService: MobileViewService,
-              private conversationDataService: ConversationDataService) { 
+              private conversationDataService: ConversationDataService,
+              private usersService: UsersService) { 
     this.onScreenResize();
+    this.subscribeToIsMobileSubject();
+    this.subscribeToActiveUser();
   }
 
   public ngOnInit(): void {
-    this.subscribeToIsMobileSubject();
+
+  }
+
+  private subscribeToActiveUser(): void {
+    this.usersService.getActiveUser().subscribe(user => this.activeUser = user);
   }
 
   @HostListener('window:resize', ['$event'])

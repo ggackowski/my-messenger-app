@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, from, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class FirebaseAuthService {
   }
 
   public getActiveUser(): Observable<User> {
-    return from(this.angularFireAuth.user).pipe(map(x => ({name: x.email} as User)));
+    return from(this.angularFireAuth.user).pipe(filter(x => x !== null), map(x => ({name: x.email} as User)));
   }
 
   public logout(): Observable<void> {

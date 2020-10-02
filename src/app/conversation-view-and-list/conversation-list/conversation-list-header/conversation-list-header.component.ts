@@ -8,16 +8,17 @@ import { User } from 'src/app/models/user.model';
   styleUrls: ['./conversation-list-header.component.css']
 })
 export class ConversationListHeaderComponent implements OnInit {
-  public user: User;
+  public activeUser: User;
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService) {
+    this.subscribeToActiveUser();
+   }
 
   ngOnInit(): void {
-    this.user = this.usersService.getActiveUser();
   }
 
   private subscribeToActiveUser(): void {
-
+    this.usersService.getActiveUser().subscribe(user => this.activeUser = user);
   }
 
 }

@@ -26,7 +26,7 @@ export class LogInComponent implements OnInit {
     this.authenticationInProgress = true;
     this.usersService.loginWithCredentials(this.email, this.password)
       .pipe(take(1)).subscribe((response) => {
-        if (response) {
+        if (response) { 
           this.authenticationInProgress = false;
           this.router.navigate(['conversation-view-and-list']);
         } else {

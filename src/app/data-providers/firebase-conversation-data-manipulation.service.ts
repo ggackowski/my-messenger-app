@@ -47,6 +47,7 @@ export class FirebaseConversationDataManipulationService {
   }
   private mapKeyValuePairsToArrayAndFilter(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], userId: string) {
     const arr = [];
+    console.log('userid', userId);
     this.createArrayFromObject(object, arr);
     console.log(arr.filter(el => el.value.includes(userId)))
     return arr.filter(el => el.value.includes(userId)).map(el => el.key);

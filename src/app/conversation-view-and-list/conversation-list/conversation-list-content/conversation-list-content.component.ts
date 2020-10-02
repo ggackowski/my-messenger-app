@@ -4,6 +4,7 @@ import { ConversationDataService } from 'src/app/conversation-view-and-list/conv
 import { Color } from 'src/app/enums/color.enum';
 import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/users-manipulation/users.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-conversation-list-content',
@@ -14,15 +15,25 @@ export class ConversationListContentComponent implements OnInit {
   public conversations = [];
   public conversationsIds = [];
   public clickedIndex = -1;
+  private activeUser: User = undefined;
+
   constructor(private conversationDataService: ConversationDataService,
               private usersService: UsersService) { }
 
   ngOnInit(): void {
-    this.subscribeToAvailableConversations();
+    this.subscribeToCurrentUserAndConversations();
+
+  }
+
+  private subscribeToCurrentUserAndConversations(): void {
+    this.usersService.getActiveUser().subscribe(user => 
+     { this.activeUser = user;
+      this.subscribeToAvailableConversations();
+    });
   }
 
   private subscribeToAvailableConversations(): void {
-    this.conversationDataService.getAvailableConversationsForUser(this.usersService.getActiveUser().name)
+    this.conversationDataService.getAvailableConversationsForUser(this.activeUser.name)
       .subscribe(conversationsIds => {
         this.conversations.length = 0;
         this.conversationsIds.length = 0;

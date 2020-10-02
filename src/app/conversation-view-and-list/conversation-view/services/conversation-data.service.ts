@@ -13,10 +13,17 @@ import { map, mergeMap } from 'rxjs/operators';
 export class ConversationDataService {
   private activeConversation = new BehaviorSubject<string>(undefined); 
   private activeConversationId: string;
+  private activeUser = undefined;
 
   constructor(private conversationDataManipulationService: FirebaseConversationDataManipulationService,
     private usersService: UsersService) { 
-      
+      this.subscribeToCurrentUser();
+  }
+
+  private subscribeToCurrentUser(): void {
+    this.usersService.getActiveUser().subscribe(
+      user => this.activeUser = user
+    );
   }
 
   public getActiveConversationId(): BehaviorSubject<string> {
@@ -69,7 +76,7 @@ export class ConversationDataService {
     const message: Message = {
       date: date,
       content: content,
-      author: this.usersService.getActiveUser(),
+      author: this.activeUser,
       status: MessageStatus.SENT,
     }
     console.log(this.activeConversationId)

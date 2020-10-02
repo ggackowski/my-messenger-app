@@ -17,10 +17,11 @@ export class UsersService {
   
   constructor(private authService: FirebaseAuthService) { 
     this.subscribeToActiveUser();
+    this.logout();
   }
 
-  public getActiveUser(): User {
-    return this.activeUser;
+  public getActiveUser(): Observable<User> {
+    return this.authService.getActiveUser();
   }
 
   public registerUser(email: string, password: string): Observable<string> {
@@ -36,12 +37,13 @@ export class UsersService {
   }
 
   public loginWithCredentials(email: string, password: string): Observable<string> {
+    console.log('LOGUJE SIE');
     return this.authService.login(email, password)
   }
 
   private subscribeToActiveUser(): void {
     this.authService.getActiveUser().subscribe(
-      user => this.activeUser = user
+      user => { this.activeUser = user;       console.log('gettin user', user); }
     )
   }
 }

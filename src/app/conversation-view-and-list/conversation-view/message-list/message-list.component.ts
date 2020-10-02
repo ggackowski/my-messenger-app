@@ -14,6 +14,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
   public messages: Message[];
   private activeConversationId: string;
   private messagesSubscription = new Subscription();
+  private activeUser = undefined;
 
   constructor(private conversationDataService: ConversationDataService,
               private usersService: UsersService) { }
@@ -21,6 +22,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.subscribeToActiveConversationId();
     // this.subscribeToConversationMessages();
+    this.subscribeToCurrentUser();
   }
 
   public ngOnDestroy(): void {
@@ -28,13 +30,17 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   public setMessageAlign(message: Message) {
-    if (message.author.name === this.usersService.getActiveUser().name) {
+    if (this.isSentByThisUser(message)) {
       return { justifyContent: 'flex-end' }
     }
   }
 
   public isSentByThisUser(message: Message): boolean {
-    return message.author.name === this.usersService.getActiveUser().name
+    return message.author.name === this.activeUser
+  }
+
+  private subscribeToCurrentUser(): void {
+    this.usersService.getActiveUser().subscribe(user => this.activeUser = user);
   }
 
   private subscribeToConversationMessages(): void {
