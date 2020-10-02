@@ -12,15 +12,40 @@ import { Observable, zip } from 'rxjs';
 export class TestService {
 
   constructor(private angularFireDatabase: AngularFireDatabase) {
-   // this.getAllAvailableConversationIds().subscribe(conv => console.log(conv));
-   // this.getConversationById('0').subscribe(conv => console.log(conv));
-   // this.getAvailableConversationsData().subscribe(d => console.log(d));
+    this.getAvailableConversationIdsForUserId('e@mail.com').subscribe(
+      a => console.log(a)
+    )
+    this.getConversationNameFromId('0').subscribe(
+      a => console.log(a)
+    )
   }
 
   public getAvailableConversationsData() {
     return zip(this.getAllAvailableConversationIds(),
                this.getAllAvailableConversationNames());
   }
+
+  public getAvailableConversationIdsForUserId(userId: string) {
+    return this.angularFireDatabase.list(`conversations/conversationParticipants`).snapshotChanges()
+            .pipe(map(changes => this.initialMappingToKeyValuePairs(changes)),
+             map(object => {
+              const arr = []
+              Object.keys(object).forEach(key => {
+                arr.push({
+                  ...object[key]
+                })
+              })
+              console.log(arr.filter(el => el.value.includes(userId)));
+              return arr.filter(el => el.value.includes(userId));
+            }));
+  }
+
+
+  public getConversationNameFromId(conversationId: string): Observable<string> {
+    return this.angularFireDatabase.object(`conversations/conversationNames/${conversationId}`)
+            .snapshotChanges().pipe(map(a => a.payload.val() as string));
+  }
+
 
   public sendMessage(message: Message, conversationId: string): void {
     // this.mapConversations(this.angularFireDatabase.list('conversations/')

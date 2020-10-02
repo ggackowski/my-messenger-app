@@ -40,6 +40,29 @@ export class FirebaseConversationDataManipulationService {
     };
   }
 
+  public getAvailableConversationIdsForUserId(userId: string) {
+    return this.angularFireDatabase.list(`conversations/conversationParticipants`).snapshotChanges()
+            .pipe(map(changes => this.initialMappingToKeyValuePairs(changes)),
+             map(pairs => this.mapKeyValuePairsToArrayAndFilter(pairs, userId)));
+  }
+  private mapKeyValuePairsToArrayAndFilter(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], userId: string) {
+    const arr = [];
+    this.createArrayFromObject(object, arr);
+    console.log(arr.filter(el => el.value.includes(userId)))
+    return arr.filter(el => el.value.includes(userId)).map(el => el.key);
+  }
+
+  private createArrayFromObject(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], arr: any[]) {
+    Object.keys(object).forEach(key => {
+      arr.push({ ...object[key]});
+    });
+  }
+
+  public getConversationNameFromId(conversationId: string): Observable<string> {
+    return this.angularFireDatabase.object(`conversations/conversationNames/${conversationId}`)
+            .snapshotChanges().pipe(map(a => a.payload.val() as string));
+  }
+
   public getAllAvailableConversationIds(): Observable<string[]> {
     return this.mapString(this.conversationIdsListRef.snapshotChanges());
   }

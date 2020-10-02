@@ -29,8 +29,12 @@ export class ConversationDataService {
       .pipe(map(conversation => conversation.messages));
   }
 
-  public getAvailableConversations(): Observable<String[]> {
+  public getAvailableConversations(): Observable<string[]> {
     return this.conversationDataManipulationService.getAllAvailableConversationIds();
+  }
+
+  public getAvailableConversationsForUser(userId: string): Observable<string[]> {
+    return this.conversationDataManipulationService.getAvailableConversationIdsForUserId(userId);
   }
 
   public getAvailableConversationsData() {
@@ -38,7 +42,11 @@ export class ConversationDataService {
                this.conversationDataManipulationService.getAllAvailableConversationNames());
   }
 
-  public getAvailableConversationNames(): Observable<String[]> {
+  public getConversationNameById(id: string): Observable<string> {
+    return this.conversationDataManipulationService.getConversationNameFromId(id);
+  }
+
+  public getAvailableConversationNames(): Observable<string[]> {
     return this.conversationDataManipulationService.getAllAvailableConversationNames();
   }
 

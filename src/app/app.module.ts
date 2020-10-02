@@ -16,6 +16,8 @@ import { SentMessageStatusComponent } from './conversation-view-and-list/convers
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { LogInComponent } from './log-in/log-in.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     ConversationListHeaderComponent,
     ConversationListContentComponent,
     ConversationViewAndListComponent,
-    SentMessageStatusComponent
+    SentMessageStatusComponent,
+    LogInComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
