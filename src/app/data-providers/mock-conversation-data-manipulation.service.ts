@@ -1,60 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Message } from '../models/message.model';
-import { of, Observable } from 'rxjs';
+import { Message, MessageStatus } from '../models/message.model';
+import { of, Observable, Subject } from 'rxjs';
 import { Conversation } from '../models/conversation.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockConversationDataManipulationService {
-
-  private mockMessages = [
-    {
-      date: new Date(),
-      content: 'Hi',
-      author: {name: 'Me'}
-    },
-    {
-      date: new Date(),
-      content: 'Test',
-      author: {name: 'Me'}
-    },
-    {
-      date: new Date(),
-      content: 'bleh bleh bleh bleh',
-      author: {name: 'Me'}
-    },
-    {
-      date: new Date(),
-      content: 'Hello',
-      author: {name: 'Not me'}
-    },
-    {
-      date: new Date(),
-      content: 'trrrrrrrrrrrrrrr r r r',
-      author: {name: 'Me'}
-    }
-  ];
-
+/*
   private mockUsers = [
     { name: 'Me' },
     { name: 'They' },
     { name: 'Him '}
   ];
 
-  private mockConversations = [
+  private mockConversations: Conversation[] = [
     {
       conversationId: '1',
       messages: [
         {
           date: new Date(),
           content: 'bleh bleh bleh bleh',
-          author: {name: 'Me'}
+          author: {name: 'Me'},
+          status: MessageStatus.SEEN
         },
         {
           date: new Date(),
           content: 'Hello',
-          author: {name: 'Not me'}
+          author: {name: 'Not me'},
+          status: MessageStatus.SENT
         },
       ],
       participants: [
@@ -69,12 +43,14 @@ export class MockConversationDataManipulationService {
         {
           date: new Date(),
           content: 'second convo',
-          author: {name: 'They'}
+          author: {name: 'They'},
+          status: MessageStatus.DELIVERED
         },
         {
           date: new Date(),
           content: 'Aaaaa aa',
-          author: {name: 'Me'}
+          author: {name: 'Me'},
+          status: MessageStatus.DELIVERED
         },
       ],
       participants: [
@@ -82,7 +58,7 @@ export class MockConversationDataManipulationService {
         { name: 'They' }
       ]
     }
-  ];
+  ]; 
 
   constructor() { }
 
@@ -101,4 +77,5 @@ export class MockConversationDataManipulationService {
   public getAvailableConversations(): Observable<Conversation[]> {
     return of(this.mockConversations);
   }
+  */
 }

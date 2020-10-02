@@ -1,53 +1,70 @@
 import { Injectable } from '@angular/core';
-import { Message } from 'src/app/models/message.model';
+import { Message, MessageStatus } from 'src/app/models/message.model';
 import { MockConversationDataManipulationService } from 'src/app/data-providers/mock-conversation-data-manipulation.service';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription, zip } from 'rxjs';
 import { UsersService } from 'src/app/users-manipulation/users.service';
 import { Conversation } from 'src/app/models/conversation.model';
+import { FirebaseConversationDataManipulationService } from 'src/app/data-providers/firebase-conversation-data-manipulation.service';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConversationDataService {
-  private activeConversation: Conversation;
-  private availableConversations: Observable<Conversation[]>;
-  private activeConversationSubject = new BehaviorSubject<string>(undefined);
+  private activeConversation = new BehaviorSubject<string>(undefined); 
+  private activeConversationId: string;
 
-  constructor(private conversationDataManipulationService: MockConversationDataManipulationService,
+  constructor(private conversationDataManipulationService: FirebaseConversationDataManipulationService,
     private usersService: UsersService) { 
-      this.availableConversations = this.conversationDataManipulationService.getAvailableConversations();
-    }
+      
+  }
 
   public getActiveConversationId(): BehaviorSubject<string> {
-    return this.activeConversationSubject;
+    return this.activeConversation;
   } 
 
   public getMessagesByConversationId(conversationId: string): Observable<Message[]> {
-    return this.conversationDataManipulationService.getConversationMessagesByConversationId(conversationId);
+    console.log('trying to get mess from conv ', conversationId);
+    return this.conversationDataManipulationService.getConversationById(conversationId)
+      .pipe(map(conversation => conversation.messages));
   }
 
-  public getAvailableConversations(): Observable<Conversation[]> {
-    return this.availableConversations;
+  public getAvailableConversations(): Observable<String[]> {
+    return this.conversationDataManipulationService.getAllAvailableConversationIds();
+  }
+
+  public getAvailableConversationsData() {
+    return zip(this.conversationDataManipulationService.getAllAvailableConversationIds(),
+               this.conversationDataManipulationService.getAllAvailableConversationNames());
+  }
+
+  public getAvailableConversationNames(): Observable<String[]> {
+    return this.conversationDataManipulationService.getAllAvailableConversationNames();
+  }
+
+  public getLastMessageFromActiveConversation(): BehaviorSubject<Message> {
+    return undefined;
+  }
+
+  public getActiveConversationName(): Observable<string> {
+    return undefined;
   }
 
   public setActiveConversation(conversationId: string): void {
-    if (conversationId === undefined) {
-      this.activeConversation = undefined;
-      this.activeConversationSubject.next(undefined);
-      return;
-    }
-    this.activeConversation = this.conversationDataManipulationService.getConversationById(conversationId);
-    this.activeConversationSubject.next(this.activeConversation.conversationId);
+    this.activeConversationId = conversationId;
+    this.activeConversation.next(conversationId);
   }
+  
 
   public sendMessage(content: string) {
     const date = new Date();
     const message: Message = {
       date: date,
       content: content,
-      author: this.usersService.getActiveUser()
+      author: this.usersService.getActiveUser(),
+      status: MessageStatus.SENT,
     }
-    this.conversationDataManipulationService.sendMessage(message, this.activeConversation.conversationId);
+    console.log(this.activeConversationId)
+    this.conversationDataManipulationService.sendMessage(message, this.activeConversationId);
   }
-
 }

@@ -1,0 +1,63 @@
+{
+"conversations": [
+    {   "name": "Jim",
+        "messages": [
+            {
+                "date": "1.10.20 12:20:10",
+                "content": "Hello there!",
+                "author": "0", 
+                "status": "delivered"
+            },
+            {
+                "date": "1.10.20 15:20:10",
+                "content": "What's up?",
+                "author": "1", 
+                "status": "seen"
+            }
+        ],
+        "participants": [
+            {
+                "name": "Me",
+                "password": "xxxxxxx"
+            },
+            {
+                "name": "Jim",
+                "password": "xxxxxxx"
+            }
+        ]
+    },
+    {
+        "name": "Somebody",
+        "messages": [
+            {
+                "date": "2.10.20 2:20:10",
+                "content": "test test",
+                "author": "0", 
+                "status": "seen"
+            },
+            {
+                "date": "2.10.20 11:10:12",
+                "content": "another test",
+                "author": "1", 
+                "status": "sent"
+            }
+        ],
+        "participants": [
+            {
+                "name": "Me",
+                "password": "xxxxxxx"
+            },
+            {
+                "name": "Somebody",
+                "password": "xxxxxxx"
+            }
+        ]
+    }
+],
+"conversationIds": [
+    "0", "1"
+],
+"conversationNames": [
+    "Jim", "Somebody"
+]
+}

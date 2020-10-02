@@ -1,6 +1,7 @@
 <div class="wrapper" *ngIf="isConversationSelected()">
     <app-conversation-header></app-conversation-header>
     <app-message-list></app-message-list>
+    <app-sent-message-status></app-sent-message-status>
     <app-message-input></app-message-input>
 </div>
 <div *ngIf="!isConversationSelected()">

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 
 const mockUser = {
-  name: 'Me'
+  name: 'Jim'
 }
 
 @Injectable({

@@ -12,6 +12,10 @@ import { ConversationListComponent } from './conversation-view-and-list/conversa
 import { ConversationListHeaderComponent } from './conversation-view-and-list/conversation-list/conversation-list-header/conversation-list-header.component';
 import { ConversationListContentComponent } from './conversation-view-and-list/conversation-list/conversation-list-content/conversation-list-content.component';
 import { ConversationViewAndListComponent } from './conversation-view-and-list/conversation-view-and-list.component';
+import { SentMessageStatusComponent } from './conversation-view-and-list/conversation-view/sent-message-status/sent-message-status.component';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 @NgModule({
   declarations: [
@@ -24,12 +28,15 @@ import { ConversationViewAndListComponent } from './conversation-view-and-list/c
     ConversationListComponent,
     ConversationListHeaderComponent,
     ConversationListContentComponent,
-    ConversationViewAndListComponent
+    ConversationViewAndListComponent,
+    SentMessageStatusComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireDatabaseModule
   ],
   providers: [],
   bootstrap: [AppComponent]

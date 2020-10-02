@@ -9,12 +9,14 @@ import { ConversationDataService } from '../services/conversation-data.service';
 })
 export class ConversationHeaderComponent implements OnInit {
   public isViewMobile = false;
+  public conversationName = '';
 
   constructor(private mobileViewService: MobileViewService,
               private conversationDataService: ConversationDataService) { }
 
   ngOnInit(): void {
     this.subscribeToIsMobileSubject();
+    this.subscribeToActiveConversationName();
   }
 
   public onBackButtonClick(): void {
@@ -26,5 +28,14 @@ export class ConversationHeaderComponent implements OnInit {
       this.isViewMobile = isMobile;
     })
   }
+
+  private subscribeToActiveConversationName(): void {
+    this.conversationDataService.getActiveConversationId().subscribe(conversationId => {
+      if (conversationId === undefined) {
+      } else {
+        this.conversationName = conversationId;
+      }
+    });
+}
 
 }

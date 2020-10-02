@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TestService } from './test.service';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,9 @@ export class AppComponent {
 
   public newDate(): Date {
     return new Date();
+  }
+
+  constructor(private t: TestService) {
+  
   }
 }

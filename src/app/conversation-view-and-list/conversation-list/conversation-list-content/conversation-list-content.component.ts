@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Conversation } from 'src/app/models/conversation.model';
 import { ConversationDataService } from 'src/app/conversation-view-and-list/conversation-view/services/conversation-data.service';
 import { Color } from 'src/app/enums/color.enum';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-conversation-list-content',
@@ -9,7 +10,8 @@ import { Color } from 'src/app/enums/color.enum';
   styleUrls: ['./conversation-list-content.component.css']
 })
 export class ConversationListContentComponent implements OnInit {
-  public conversations: Conversation[];
+  public conversations: string[];
+  public conversationsIds: string[];
   public clickedIndex = -1;
   constructor(private conversationDataService: ConversationDataService) { }
 
@@ -18,15 +20,20 @@ export class ConversationListContentComponent implements OnInit {
   }
 
   subscribeToAvailableConversations(): void {
-    this.conversationDataService.getAvailableConversations().subscribe(
-      (conversations: Conversation[]) => this.conversations = conversations
+    this.conversationDataService.getAvailableConversationsData().subscribe(
+      (conversations: [string[], string[]]) => { 
+        console.log(conversations); 
+        this.conversations = conversations[1];
+        this.conversationsIds = conversations[0];
+      }
     );
   }
 
   public onConversationClick(index: number) {
     console.log(this.conversations[index]);
     this.clickedIndex = index;
-    this.conversationDataService.setActiveConversation(this.conversations[index].conversationId);
+    console.log(this.conversationsIds[index]);
+    this.conversationDataService.setActiveConversation(this.conversationsIds[index]);
   }
 
   public setClickedStyle() {

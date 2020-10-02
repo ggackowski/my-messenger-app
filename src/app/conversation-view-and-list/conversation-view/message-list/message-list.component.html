@@ -4,7 +4,7 @@
             [messageContent]="message.content"
             [messageDate]="message.date"
             [messageAuthor]="message.author.name"
-            [sentByThisUser]="message.author.name === 'Me'"     
+            [sentByThisUser]="isSentByThisUser(message)"     
         ></app-message>
     </div>
 </div>
