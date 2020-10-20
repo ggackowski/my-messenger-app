@@ -30,7 +30,6 @@ export class RegisterComponent implements OnInit {
   public onRegisterButtonClick(): void {
     this.authenticationInProgress = true;
     if (this.password1 !== this.password2) {
-      console.log('err');
       return;
     }
     this.usersService.registerUser(this.email, this.password1)

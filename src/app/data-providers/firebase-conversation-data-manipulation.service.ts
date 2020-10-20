@@ -45,12 +45,25 @@ export class FirebaseConversationDataManipulationService {
             .pipe(map(changes => this.initialMappingToKeyValuePairs(changes)),
              map(pairs => this.mapKeyValuePairsToArrayAndFilter(pairs, userId)));
   }
+
+  public getConversationParticipantsById(conversationId: string) {
+    return this.angularFireDatabase.list(`conversations/conversationParticipants/${conversationId}`).snapshotChanges()
+      .pipe(map(changes => this.initialMappingToKeyValuePairs(changes)),
+            map(pairs => this.mapKeyValuePairsToArray(pairs).map(el => el.value)));
+  }
+
+
+
   private mapKeyValuePairsToArrayAndFilter(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], userId: string) {
-    const arr = [];
-    console.log('userid', userId);
-    this.createArrayFromObject(object, arr);
+    const arr = this.mapKeyValuePairsToArray(object);
     console.log(arr.filter(el => el.value.includes(userId)))
     return arr.filter(el => el.value.includes(userId)).map(el => el.key);
+  }
+
+  private mapKeyValuePairsToArray(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[]) {
+    const arr = [];
+    this.createArrayFromObject(object, arr);
+    return arr;
   }
 
   private createArrayFromObject(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], arr: any[]) {
@@ -60,8 +73,8 @@ export class FirebaseConversationDataManipulationService {
   }
 
   public getConversationNameFromId(conversationId: string): Observable<string> {
-    return this.angularFireDatabase.object(`conversations/conversationNames/${conversationId}`)
-            .snapshotChanges().pipe(map(a => a.payload.val() as string));
+    const snapshot = this.angularFireDatabase.object(`conversations/conversationNames/${conversationId}`).snapshotChanges();
+    return snapshot.pipe(map(a => { if (!a.key) { return null; } return a.payload.val() as string; }));
   }
 
   public getAllAvailableConversationIds(): Observable<string[]> {

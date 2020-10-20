@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, SnapshotAction } from '@angular/fire/database';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, mergeMap } from 'rxjs/operators';
 import { Conversation } from './models/conversation.model';
 import { Message } from './models/message.model';
 import { User } from './models/user.model';
-import { Observable, zip } from 'rxjs';
+import { Observable, zip, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,10 @@ export class TestService {
     this.getAvailableConversationIdsForUserId('e@mail.com').subscribe(
       a => console.log(a)
     )
-    this.getConversationNameFromId('0').subscribe(
+    this.getConversationNameById('0').subscribe(
+      a => console.log(a)
+    )
+    this.getConversationParticipantsById('0').subscribe(
       a => console.log(a)
     )
   }
@@ -41,9 +44,46 @@ export class TestService {
   }
 
 
+  public getConversationParticipantsById(conversationId: string) {
+    return this.angularFireDatabase.list(`conversations/conversationParticipants/${conversationId}`).snapshotChanges()
+      .pipe(map(changes => this.initialMappingToKeyValuePairs(changes)),
+            map(pairs => this.mapKeyValuePairsToArray(pairs).map(el => el.value)));
+  }
+
+
+
+  private mapKeyValuePairsToArrayAndFilter(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], userId: string) {
+    const arr = this.mapKeyValuePairsToArray(object);
+    console.log(arr.filter(el => el.value.includes(userId)))
+    return arr.filter(el => el.value.includes(userId)).map(el => el.key);
+  }
+
+  private mapKeyValuePairsToArray(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[]) {
+    const arr = [];
+    this.createArrayFromObject(object, arr);
+    return arr;
+  }
+
+  private createArrayFromObject(object: { key: string; value: { name: string; messages: Message[]; participants: User[]; }; }[], arr: any[]) {
+    Object.keys(object).forEach(key => {
+      arr.push({ ...object[key]});
+    });
+  }
+
+  public getConversationNameById(id: string): Observable<string> {
+    return this.getConversationNameFromId(id)
+      .pipe(mergeMap(name => {
+        if (name) { return of(name); }
+        console.log(name, id);
+        return this.getConversationParticipantsById(id)
+          .pipe(map(participants => participants.filter(participant => participant !== 'a@a.pl').reduce((acc, participant) => acc += `${participant} `, '')));
+      }))
+  }
+
+
   public getConversationNameFromId(conversationId: string): Observable<string> {
-    return this.angularFireDatabase.object(`conversations/conversationNames/${conversationId}`)
-            .snapshotChanges().pipe(map(a => a.payload.val() as string));
+    const snapshot = this.angularFireDatabase.object(`conversations/conversationNames/${conversationId}`).snapshotChanges();
+    return snapshot.pipe(map(a => { if (!a.key) { return null; } return a.payload.val() as string; }));
   }
 
 

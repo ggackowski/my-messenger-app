@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageStatus } from 'src/app/models/message.model';
 import { MockConversationDataManipulationService } from 'src/app/data-providers/mock-conversation-data-manipulation.service';
-import { Observable, Subject, BehaviorSubject, Subscription, zip } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription, zip, of } from 'rxjs';
 import { UsersService } from 'src/app/users-manipulation/users.service';
 import { Conversation } from 'src/app/models/conversation.model';
 import { FirebaseConversationDataManipulationService } from 'src/app/data-providers/firebase-conversation-data-manipulation.service';
@@ -50,7 +50,12 @@ export class ConversationDataService {
   }
 
   public getConversationNameById(id: string): Observable<string> {
-    return this.conversationDataManipulationService.getConversationNameFromId(id);
+    return this.conversationDataManipulationService.getConversationNameFromId(id)
+      .pipe(mergeMap(name => {
+        if (name) { return of(name); }
+        return this.conversationDataManipulationService.getConversationParticipantsById(id)
+          .pipe(map(participants => participants.filter(participant => participant !== this.activeUser.name).reduce((acc, participant) => acc += `${participant} `, '')));
+      }))
   }
 
   public getAvailableConversationNames(): Observable<string[]> {

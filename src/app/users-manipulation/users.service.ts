@@ -37,13 +37,12 @@ export class UsersService {
   }
 
   public loginWithCredentials(email: string, password: string): Observable<string> {
-    console.log('LOGUJE SIE');
     return this.authService.login(email, password)
   }
 
   private subscribeToActiveUser(): void {
     this.authService.getActiveUser().subscribe(
-      user => { this.activeUser = user;       console.log('gettin user', user); }
+      user => { this.activeUser = user; }
     )
   }
 }

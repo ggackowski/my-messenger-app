@@ -21,7 +21,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.subscribeToActiveConversationId();
-    // this.subscribeToConversationMessages();
     this.subscribeToCurrentUser();
   }
 
@@ -44,13 +43,9 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToConversationMessages(): void {
-    console.log('prg')
-    console.log('aaaaaaaaaaaaaa', this.activeConversationId);
     this.messagesSubscription.add(
     this.conversationDataService.getMessagesByConversationId(this.activeConversationId)  
     .subscribe((messages: Message[]) => {
-      console.log('SDFSDFSD')
-      console.log(messages);
       this.messages = messages
     }));
   }
@@ -60,9 +55,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
         this.activeConversationId = conversationId
         if (conversationId === undefined) {
         } else {
-          console.log('asf')
-          console.log(conversationId);
-        // this.messagesSubscription.unsubscribe();
         this.subscribeToConversationMessages();
         }
       });

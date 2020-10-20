@@ -22,7 +22,6 @@ export class ConversationListContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeToCurrentUserAndConversations();
-
   }
 
   private subscribeToCurrentUserAndConversations(): void {
@@ -39,7 +38,8 @@ export class ConversationListContentComponent implements OnInit {
         this.conversationsIds.length = 0;
         this.conversationsIds = conversationsIds;
         conversationsIds.forEach(
-          conversationId => { console.log(conversationId); this.conversationDataService.getConversationNameById(conversationId)
+          conversationId => {  
+            this.conversationDataService.getConversationNameById(conversationId)
               .subscribe(conversationName => this.conversations.push(conversationName)) }
         )
       });
@@ -50,9 +50,7 @@ export class ConversationListContentComponent implements OnInit {
   }
 
   public onConversationClick(index: number) {
-    console.log(this.conversations[index]);
     this.clickedIndex = index;
-    console.log(this.conversationsIds[index]);
     this.conversationDataService.setActiveConversation(this.conversationsIds[index]);
   }
 
